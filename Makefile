@@ -16,4 +16,4 @@ uninstall:
 		"${CONFDIR}/tpl" \
 		"${DESTDIR}/tpl"
 
-.PHONY: install uninstall install-common
+.PHONY: install uninstall install-home
