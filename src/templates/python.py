@@ -6,4 +6,4 @@
 
 
 if __name__ == '__main__':
-    pass${PY_MODELINE}
+	pass${PY_MODELINE}
