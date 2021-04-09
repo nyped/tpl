@@ -1,21 +1,9 @@
 #!/usr/bin/env bash
 # tpl
-# Fri Apr  9 09:55:54 PM CEST 2021
+# Fri Apr  9 11:45:30 PM CEST 2021
 # lennypeers
 
 readonly VERSION=0.1
-
-subs=(
-  AUTHOR
-  TITLE
-  MD_MODELINE
-  C_MODELINE
-  C_MAIN_HEADER
-  C_MAKEFILE_CC
-  C_MAKEFILE_CFLAGS
-  SHELL_MODELINE
-  PY_MODELINE
-)
 
 fail() {
   echo -e "$1" >&2
@@ -23,7 +11,11 @@ fail() {
 }
 
 infos() {
-  echo tpl v${VERSION}
+  cat << EOF
+tpl v${VERSION}
+MIT License
+Copyright (c) 2021 lennypeers
+EOF
 }
 
 # wraps a variable with two strings
@@ -118,7 +110,7 @@ find_tpl_dirs() {
 
 # version?
 [[ "$1" == "-v" || "$1" == "--version" ]] && \
-  info && exit 0
+  infos && exit 0
 
 # force?
 [[ "$1" == "-f" ]] && \
