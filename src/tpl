@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+# tpl
+# Fri Apr  9 09:55:54 PM CEST 2021
+# lennypeers
+
+readonly VERSION=0.1
+
+subs=(
+  AUTHOR
+  TITLE
+  MD_MODELINE
+  C_MODELINE
+  C_MAIN_HEADER
+  C_MAKEFILE_CC
+  C_MAKEFILE_CFLAGS
+  SHELL_MODELINE
+  PY_MODELINE
+)
+
+fail() {
+  echo -e "$1" >&2
+  exit ${2:-255}
+}
+
+infos() {
+  echo tpl v${VERSION}
+}
+
+# wraps a variable with two strings
+# wrap var_name left_string right_string
+wrap() {
+  local content
+  eval content="\$${1}"
+  export "${1}=${2:-}${content}${3:-}"
+}
+
+write() {
+  [[ -f $2 && "$FORCE" != 1 ]] && fail "File $2 exists." 1
+  envsubst < "$1" > "$2"
+  perms "$2"
+}
+
+perms() {
+  case "$1" in
+    *.sh | *.py)
+      chmod +x "$1"
+      ;;
+
+    *)
+    :
+      ;;
+  esac
+}
+
+find_template() {
+  case "$1" in
+    cmain | c_main | cm | [cC])
+      echo ${TPL_TEMP_DIR}/c_main.c $2.c
+      ;;
+
+    cheader | c_header | ch)
+      echo ${TPL_TEMP_DIR}/c_header.h $2.h
+      ;;
+
+    [Mm]akefile | make)
+      echo ${TPL_TEMP_DIR}/c_Makefile Makefile
+      ;;
+
+    [Pp]ython | [Pp]y)
+      echo ${TPL_TEMP_DIR}/python.py $2.py
+      ;;
+
+    [bB]ash | [Ss]h | [Ss]hell)
+      echo ${TPL_TEMP_DIR}/bash.sh $2.sh
+      ;;
+
+    [Zz]sh)
+      echo ${TPL_TEMP_DIR}/zsh.sh $2.sh
+      ;;
+
+    [Mm]d | [Mm]arkdown)
+      echo ${TPL_TEMP_DIR}/article.md $2.md
+      ;;
+
+    [Rr]eadme)
+      echo ${TPL_TEMP_DIR}/git_readme.md $2.md
+      ;;
+
+    *)
+      fail "Entry not found." 254
+      ;;
+  esac
+}
+
+set_vars() {
+  source ${TPL_CONF}
+
+  # fixing TITLE in c header
+  if [[ "$1" == c_header || "${1}" == cheader || "${1}" == ch ]]; then
+    export TITLE="${1^^}"
+  else
+    export TITLE="${1}"
+  fi
+
+  export DATE="$(date)"
+}
+
+find_tpl_dirs() {
+  TPL_CONF=~/.config/tpl/config
+  TPL_TEMP_DIR=~/.config/tpl/templates
+}
+
+# no args
+[[ $# == 0 ]] &&
+  fail \
+"usage: tpl [-fv] <template> [name]
+        where template is the wanted template"
+
+# version?
+[[ "$1" == "-v" || "$1" == "--version" ]] && \
+  info && exit 0
+
+# force?
+[[ "$1" == "-f" ]] && \
+  FORCE=1 && shift
+
+find_tpl_dirs
+set_vars "${2:-foobar}"
+read template name <<< $(find_template "$1" "${2:-foobar}")
+write "$template" "$name"
+
+# vim: set ts=2 sts=2 sw=2 et :
