@@ -47,35 +47,35 @@ perms() {
 find_template() {
   case "$1" in
     cmain | c_main | cm | [cC])
-      echo ${TPL_TEMP_DIR}/c_main.c $2.c
+      export TEMPLATE="${TPL_TEMP_DIR}"/c_main.c NAME="$2".c
       ;;
 
     cheader | c_header | ch)
-      echo ${TPL_TEMP_DIR}/c_header.h $2.h
+      export TEMPLATE="${TPL_TEMP_DIR}"/c_header.h NAME="$2".h
       ;;
 
-    [Mm]akefile | make)
-      echo ${TPL_TEMP_DIR}/c_Makefile Makefile
+    [Mm]akefile | [Mm]ake)
+      export TEMPLATE="${TPL_TEMP_DIR}"/c_Makefile NAME=Makefile
       ;;
 
     [Pp]ython | [Pp]y)
-      echo ${TPL_TEMP_DIR}/python.py $2.py
+      export TEMPLATE="${TPL_TEMP_DIR}"/python.py NAME="$2".py
       ;;
 
     [bB]ash | [Ss]h | [Ss]hell)
-      echo ${TPL_TEMP_DIR}/bash.sh $2.sh
+      export TEMPLATE="${TPL_TEMP_DIR}"/bash.sh NAME="$2".sh
       ;;
 
     [Zz]sh)
-      echo ${TPL_TEMP_DIR}/zsh.sh $2.sh
+      export TEMPLATE="${TPL_TEMP_DIR}"/zsh.sh NAME="$2".sh
       ;;
 
     [Mm]d | [Mm]arkdown)
-      echo ${TPL_TEMP_DIR}/article.md $2.md
+      export TEMPLATE="${TPL_TEMP_DIR}"/article.md NAME="$2".md
       ;;
 
     [Rr]eadme)
-      echo ${TPL_TEMP_DIR}/git_readme.md $2.md
+      export TEMPLATE="${TPL_TEMP_DIR}"/git_readme.md NAME="$2".md
       ;;
 
     *)
@@ -85,7 +85,7 @@ find_template() {
 }
 
 set_vars() {
-  source ${TPL_CONF}
+  source "${TPL_CONF}"
 
   # fixing TITLE in c header
   if [[ "$1" == c_header || "${1}" == cheader || "${1}" == ch ]]; then
@@ -118,7 +118,7 @@ find_tpl_dirs() {
 
 find_tpl_dirs
 set_vars "${2:-foobar}"
-read template name <<< $(find_template "$1" "${2:-foobar}")
-write "$template" "$name"
+find_template "$1" "${2:-foobar}"
+write "$TEMPLATE" "$NAME"
 
 # vim: set ts=2 sts=2 sw=2 et :
