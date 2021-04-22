@@ -12,8 +12,7 @@ install: install-home
 	@sudo install -m 0755 src/tpl "${DESTDIR}/tpl"
 
 uninstall:
-	@sudo rm -vrf \
-		"${CONFDIR}/tpl" \
-		"${DESTDIR}/tpl"
+	@rm -vrf "${CONFDIR}/tpl"
+	@sudo rm -vrf "${DESTDIR}/tpl"
 
 .PHONY: install uninstall install-home

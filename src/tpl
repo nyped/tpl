@@ -47,35 +47,43 @@ perms() {
 find_template() {
   case "$1" in
     cmain | c_main | cm | [cC])
-      export TEMPLATE="${TPL_TEMP_DIR}"/c_main.c NAME="$2".c
+      TEMPLATE="${TPL_TEMP_DIR}"/c_main.c
+      NAME="$2".c
       ;;
 
     cheader | c_header | ch)
-      export TEMPLATE="${TPL_TEMP_DIR}"/c_header.h NAME="$2".h
+      TEMPLATE="${TPL_TEMP_DIR}"/c_header.h
+      NAME="$2".h
       ;;
 
     [Mm]akefile | [Mm]ake)
-      export TEMPLATE="${TPL_TEMP_DIR}"/c_Makefile NAME=Makefile
+      TEMPLATE="${TPL_TEMP_DIR}"/c_Makefile
+      NAME=Makefile
       ;;
 
     [Pp]ython | [Pp]y)
-      export TEMPLATE="${TPL_TEMP_DIR}"/python.py NAME="$2".py
+      TEMPLATE="${TPL_TEMP_DIR}"/python.py
+      NAME="$2".py
       ;;
 
     [bB]ash | [Ss]h | [Ss]hell)
-      export TEMPLATE="${TPL_TEMP_DIR}"/bash.sh NAME="$2".sh
+      TEMPLATE="${TPL_TEMP_DIR}"/bash.sh
+      NAME="$2".sh
       ;;
 
     [Zz]sh)
-      export TEMPLATE="${TPL_TEMP_DIR}"/zsh.sh NAME="$2".sh
+      TEMPLATE="${TPL_TEMP_DIR}"/zsh.sh
+      NAME="$2".sh
       ;;
 
     [Mm]d | [Mm]arkdown)
-      export TEMPLATE="${TPL_TEMP_DIR}"/article.md NAME="$2".md
+      TEMPLATE="${TPL_TEMP_DIR}"/article.md
+      NAME="$2".md
       ;;
 
     [Rr]eadme)
-      export TEMPLATE="${TPL_TEMP_DIR}"/git_readme.md NAME="$2".md
+      TEMPLATE="${TPL_TEMP_DIR}"/git_readme.md
+      NAME="$2".md
       ;;
 
     *)
@@ -89,15 +97,16 @@ set_vars() {
 
   # fixing TITLE in c header
   if [[ "$1" == c_header || "${1}" == cheader || "${1}" == ch ]]; then
-    export TITLE="${1^^}"
+    TITLE="${1^^}"
   else
-    export TITLE="${1}"
+    TITLE="${1}"
   fi
 
-  export DATE="$(date)"
+  DATE="$(date)"
 }
 
 find_tpl_dirs() {
+  # TODO: check for conf somewhere else
   TPL_CONF=~/.config/tpl/config
   TPL_TEMP_DIR=~/.config/tpl/templates
 }
@@ -117,8 +126,8 @@ find_tpl_dirs() {
   FORCE=1 && shift
 
 find_tpl_dirs
-set_vars "${2:-foobar}"
 find_template "$1" "${2:-foobar}"
+set_vars "${2:-foobar}"
 write "$TEMPLATE" "$NAME"
 
 # vim: set ts=2 sts=2 sw=2 et :
