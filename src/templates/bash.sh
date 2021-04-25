@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# ${TITLE}
-# ${DATE}
-# ${AUTHOR}
+#${TITLE}
+#${DATE}
+#${AUTHOR}
 
 
 

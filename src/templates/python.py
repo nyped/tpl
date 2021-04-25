@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# ${TITLE}
-# ${DATE}
-# ${AUTHOR}
+#${TITLE}
+#${DATE}
+#${AUTHOR}
 
 
 

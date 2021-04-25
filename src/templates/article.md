@@ -1,8 +1,14 @@
 ---
-title: ${TITLE}
-author: ${AUTHOR}
+title:${TITLE}
+author:${AUTHOR}
 date: \today
----
+numbersections: false
+geometry: margin=1in
+header-includes:
+	- \usepackage{lipsum}
+documentclass: article
+toc: false
+...
 
 
 

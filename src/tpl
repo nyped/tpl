@@ -95,14 +95,9 @@ find_template() {
 set_vars() {
   source "${TPL_CONF}"
 
-  # fixing TITLE in c header
-  if [[ "$1" == c_header || "${1}" == cheader || "${1}" == ch ]]; then
-    TITLE="${1^^}"
-  else
-    TITLE="${1}"
-  fi
-
-  DATE="$(date)"
+  export TITLE=" ${1}"
+  export DATE=" $(date)"
+  export TITLE_CAP="${1^^}"
 }
 
 find_tpl_dirs() {

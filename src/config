@@ -4,7 +4,7 @@
 
 AUTHOR="Your name here"
 MD_MODELINE="vim:set ts=8 sts=4 sw=4 et:"
-C_MODELINE="vim: set ts=4 sts=4 sw=4 et :"
+C_MODELINE="vim: set ts=8 sts=4 sw=4 et :"
 C_MAIN_HEADER="#include <stdio.h>"
 C_MAKEFILE_CC=gcc
 C_MAKEFILE_CFLAGS="-Wall -g -Werror -pedantic"
@@ -12,7 +12,7 @@ SHELL_MODELINE="vim:set ts=8 sts=2 sw=2 et:"
 PY_MODELINE="vim: set ts=4 sts=4 sw=4 noet :"
 
 [[ -n "$AUTHOR" ]] && \
-  export AUTHOR="$AUTHOR"
+  export AUTHOR=" $AUTHOR"
 
 [[ -n "$MD_MODELINE" ]] && \
   wrap MD_MODELINE "<!--- " " -->"
@@ -38,10 +38,10 @@ PY_MODELINE="vim: set ts=4 sts=4 sw=4 noet :"
   export C_MAIN_HEADER="$C_MAIN_HEADER"
 
 [[ -n "$C_MAKEFILE_CC" ]] && \
-  export C_MAKEFILE_CC="$C_MAKEFILE_CC"
+  export C_MAKEFILE_CC=" $C_MAKEFILE_CC"
 
 [[ -n "$C_MAKEFILE_CFLAGS" ]] && \
-  export C_MAKEFILE_CFLAGS="$C_MAKEFILE_CFLAGS"
+  export C_MAKEFILE_CFLAGS=" $C_MAKEFILE_CFLAGS"
 
 # Makefile EXE fix
 # TODO: find a fancier way to exclude EXE substitution

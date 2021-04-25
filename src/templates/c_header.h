@@ -1,6 +1,6 @@
-#ifndef _${TITLE}_H_
-#define _${TITLE}_H_
+#ifndef _${TITLE_CAP}_H_
+#define _${TITLE_CAP}_H_
 
 
 
-#endif /* _${TITLE}_H_ */${C_MODELINE}
+#endif /* _${TITLE_CAP}_H_ */${C_MODELINE}

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
-# ${TITLE}
-# ${DATE}
-# ${AUTHOR}
+#${TITLE}
+#${DATE}
+#${AUTHOR}
 
 
 
