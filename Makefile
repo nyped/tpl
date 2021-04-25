@@ -9,7 +9,7 @@ install-home:
 	@install -m 0644 -v src/config "${CONFDIR}/tpl/config"
 
 install: install-home
-	@sudo install -m 0755 src/tpl "${DESTDIR}/tpl"
+	@sudo install -v -m 0755 src/tpl "${DESTDIR}/tpl"
 
 uninstall:
 	@rm -vrf "${CONFDIR}/tpl"
