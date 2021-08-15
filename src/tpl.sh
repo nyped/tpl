@@ -10,6 +10,25 @@ fail() {
   exit ${2:-255}
 }
 
+usage() {
+  cat << EOF
+Usage: tpl <cmd | filename>
+Available commands:
+-h, --help      Show this message
+-v, --version   Display misc infos
+
+Where filename is Makefile,
+or of the format BASE.EXT,
+with EXT in:
+c
+h
+py
+sh
+md
+make
+EOF
+}
+
 infos() {
   cat << EOF
 tpl v${VERSION}
@@ -36,10 +55,6 @@ perms() {
   case "$1" in
     *.sh | *.py)
       chmod +x "$1"
-      ;;
-
-    *)
-    :
       ;;
   esac
 }
@@ -102,27 +117,52 @@ set_vars() {
 
 find_tpl_dirs() {
   # TODO: check for conf somewhere else
-  TPL_CONF=~/.config/tpl/config
-  TPL_TEMP_DIR=~/.config/tpl/templates
+  TPL_CONF=/usr/share/tpl/config
+  TPL_TEMP_DIR=/usr/share/tpl/templates
+
+  [[ -f ~/.config/tpl/config ]] && \
+    TPL_CONF=~/.config/tpl/config
 }
 
-# no args
-[[ $# == 0 ]] &&
-  fail \
-"usage: tpl [-fv] <template> [name]
-        where template is the wanted template"
+while [[ -n $1 ]]; do
+  case "$1" in
+    -h | --help)
+      usage
+      exit 0
+    ;;
 
-# version?
-[[ "$1" == "-v" || "$1" == "--version" ]] && \
-  infos && exit 0
+    -v | --version)
+      infos
+      exit 0
+    ;;
 
-# force?
-[[ "$1" == "-f" ]] && \
-  FORCE=1 && shift
+    -f | --force)
+      FORCE=1
+    ;;
+
+    [Mm]akefile | [Mm]ake)
+      [[ -n $FOUND ]] && fail "Only one file expected" 253
+      EXT=make FOUND=1
+    ;;
+
+    *.*)
+      [[ -n $FOUND ]] && fail "Only one file expected" 253
+      FOUND=1
+      IFS=. read -r BASE EXT <<< "$1"
+    ;;
+
+    *)
+      usage >&2
+      exit 255
+    ;;
+  esac
+
+  shift
+done
 
 find_tpl_dirs
-find_template "$1" "${2:-foobar}"
-set_vars "${2:-foobar}"
+find_template "$EXT" "${BASE:-foobar}"
+set_vars "${BASE:-foobar}"
 write "$TEMPLATE" "$NAME"
 
 # vim: set ts=2 sts=2 sw=2 et :
