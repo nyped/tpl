@@ -13,6 +13,7 @@ md5sums=('SKIP')
 
 package() {
 	cd "$srcdir/$pkgname"
+	install -v -d $pkgdir/usr/share/tpl/templates
 	install -vDm0644 src/templates/* $pkgdir/usr/share/tpl/templates
 	install -vDm0644 src/config $pkgdir/usr/share/tpl/config
 	install -vDm0755 src/tpl.sh $pkgdir/usr/bin/tpl
