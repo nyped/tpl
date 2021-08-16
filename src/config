@@ -1,7 +1,4 @@
-#!/usr/bin/env bash
-
 # Your config here
-
 AUTHOR="Your name here"
 MD_MODELINE="vim:set ts=8 sts=4 sw=4 et:"
 C_MODELINE="vim: set ts=8 sts=4 sw=4 et :"
@@ -11,40 +8,11 @@ C_MAKEFILE_CFLAGS="-Wall -g -Werror -pedantic"
 SHELL_MODELINE="vim:set ts=8 sts=2 sw=2 et:"
 PY_MODELINE="vim: set ts=4 sts=4 sw=4 noet :"
 
-[[ -n "$AUTHOR" ]] && \
-  export AUTHOR=" $AUTHOR"
-
-[[ -n "$MD_MODELINE" ]] && \
-  wrap MD_MODELINE "<!--- " " -->"
-
-# ugly way to get new line...
-# definitely gotta fix it lmao
-[[ -n "$C_MODELINE" ]] && \
-  wrap C_MODELINE \
-"
-
-/* " " */"
-
-[[ -n "$PY_MODELINE" ]] && \
-  wrap PY_MODELINE \
-"
-
-# "
-
-[[ -n "$SHELL_MODELINE" ]] && \
-  wrap SHELL_MODELINE "# "
-
-[[ -n "$C_MAIN_HEADER" ]] && \
-  export C_MAIN_HEADER="$C_MAIN_HEADER"
-
-[[ -n "$C_MAKEFILE_CC" ]] && \
-  export C_MAKEFILE_CC=" $C_MAKEFILE_CC"
-
-[[ -n "$C_MAKEFILE_CFLAGS" ]] && \
-  export C_MAKEFILE_CFLAGS=" $C_MAKEFILE_CFLAGS"
-
-# Makefile EXE fix
-# TODO: find a fancier way to exclude EXE substitution
-export EXE='${EXE}'
+# Your custom templates here
+# templates=(
+#   [template.ext]=/path/to/template.ext
+#   [whatever.html]=/path/to/whatever.html
+#   ...
+# )
 
 # vim:set ts=8 sts=2 sw=2 et:

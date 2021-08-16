@@ -3,7 +3,7 @@
 # Fri Apr  9 11:45:30 PM CEST 2021
 # lennypeers
 
-readonly VERSION=0.1
+readonly VERSION=0.2
 
 fail() {
   echo -e "$1" >&2
@@ -17,13 +17,13 @@ Available commands:
 -h, --help      Show this message
 -v, --version   Display misc infos
 
-Where filename is Makefile,
-or of the format BASE.EXT,
-with EXT in:
+Where filename is Makefile or README,
+or of the format BASE.EXT, with EXT in:
 c
 h
 py
 sh
+zsh
 md
 make
 EOF
@@ -61,12 +61,12 @@ perms() {
 
 find_template() {
   case "$1" in
-    cmain | c_main | cm | [cC])
+    c)
       TEMPLATE="${TPL_TEMP_DIR}"/c_main.c
       NAME="$2".c
       ;;
 
-    cheader | c_header | ch)
+    h)
       TEMPLATE="${TPL_TEMP_DIR}"/c_header.h
       NAME="$2".h
       ;;
@@ -76,40 +76,74 @@ find_template() {
       NAME=Makefile
       ;;
 
-    [Pp]ython | [Pp]y)
+    py)
       TEMPLATE="${TPL_TEMP_DIR}"/python.py
       NAME="$2".py
       ;;
 
-    [bB]ash | [Ss]h | [Ss]hell)
+    sh)
       TEMPLATE="${TPL_TEMP_DIR}"/bash.sh
       NAME="$2".sh
       ;;
 
-    [Zz]sh)
+    zsh)
       TEMPLATE="${TPL_TEMP_DIR}"/zsh.sh
       NAME="$2".sh
       ;;
 
-    [Mm]d | [Mm]arkdown)
+    md)
       TEMPLATE="${TPL_TEMP_DIR}"/article.md
       NAME="$2".md
       ;;
 
-    [Rr]eadme)
+    README)
       TEMPLATE="${TPL_TEMP_DIR}"/git_readme.md
       NAME="$2".md
       ;;
 
-    *)
+    *) # parsing extra user configs
+      for tpl in "${!templates[@]}"; do
+        case "$tpl" in
+          *.$1)
+            TEMPLATE="${templates[$tpl]}"
+            NAME="${2}.${1}"
+            return
+          ;;
+        esac
+      done
+
       fail "Entry not found." 254
       ;;
   esac
 }
 
-set_vars() {
+read_conf() {
+  declare -Ag templates
   source "${TPL_CONF}"
 
+  [[ -n "$AUTHOR" ]] && \
+    export AUTHOR=" $AUTHOR"
+  [[ -n "$MD_MODELINE" ]] && \
+    wrap MD_MODELINE "<!--- " " -->"
+  [[ -n "$C_MODELINE" ]] && \
+    wrap C_MODELINE \
+"
+
+/* " " */"
+  [[ -n "$PY_MODELINE" ]] && \
+    wrap PY_MODELINE \
+"
+
+# "
+  [[ -n "$SHELL_MODELINE" ]] && \
+    wrap SHELL_MODELINE "# "
+  [[ -n "$C_MAIN_HEADER" ]] && \
+    export C_MAIN_HEADER="$C_MAIN_HEADER"
+  [[ -n "$C_MAKEFILE_CC" ]] && \
+    export C_MAKEFILE_CC=" $C_MAKEFILE_CC"
+  [[ -n "$C_MAKEFILE_CFLAGS" ]] && \
+    export C_MAKEFILE_CFLAGS=" $C_MAKEFILE_CFLAGS"
+  export EXE='${EXE}'
   export TITLE=" ${1}"
   export DATE=" $(date)"
   export TITLE_CAP="${1^^}"
@@ -161,8 +195,8 @@ while [[ -n $1 ]]; do
 done
 
 find_tpl_dirs
+read_conf "${BASE:-foobar}"
 find_template "$EXT" "${BASE:-foobar}"
-set_vars "${BASE:-foobar}"
 write "$TEMPLATE" "$NAME"
 
 # vim: set ts=2 sts=2 sw=2 et :
