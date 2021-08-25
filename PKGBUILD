@@ -1,6 +1,6 @@
 # Maintainer: lennypeers <lennypeers+git at protonmail>
 pkgname=tpl
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="template creator"
 arch=(x86_64)

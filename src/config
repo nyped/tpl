@@ -1,18 +1,46 @@
-# Your config here
-AUTHOR="Your name here"
-MD_MODELINE="vim:set ts=8 sts=4 sw=4 et:"
-C_MODELINE="vim: set ts=8 sts=4 sw=4 et :"
+# Declaration of the variables that will be expanded
+# If a variable is found in a template, but not is
+# defined here, it will be expanded as the empty string.
+globals=(
+  AUTHOR
+  C_MAIN_HEADER
+  C_MAKEFILE_CC
+  C_MAKEFILE_CFLAGS
+  C_MODELINE
+  DATE
+  EXE
+  MD_MODELINE
+  PY_MODELINE
+  SHELL_MODELINE
+  TITLE     # auto set if empty
+  TITLE_CAP # auto set if empty
+)
+
+# File permissions for templates.
+# In the same format as chmod.
+# chmod PERMS file.EXT will be performed.
+perms=(
+# [EXT]=PERMS
+  [sh]=+x
+  [py]=755
+)
+
+# Set the content of the variables here
+# To add a new line, just put a carriage
+# return in the quotes. \n does not work.
+AUTHOR=" Your name here"
 C_MAIN_HEADER="#include <stdio.h>"
 C_MAKEFILE_CC=gcc
 C_MAKEFILE_CFLAGS="-Wall -g -Werror -pedantic"
-SHELL_MODELINE="vim:set ts=8 sts=2 sw=2 et:"
-PY_MODELINE="vim: set ts=4 sts=4 sw=4 noet :"
+C_MODELINE="
 
-# Your custom templates here
-# templates=(
-#   [template.ext]=/path/to/template.ext
-#   [whatever.html]=/path/to/whatever.html
-#   ...
-# )
+/* vim: set ts=8 sts=4 sw=4 et : */"
+DATE=" $(date)"
+EXE='${EXE}'
+MD_MODELINE="<!-- vim:set ts=8 sts=4 sw=4 et: -->"
+PY_MODELINE="
 
-# vim:set ts=8 sts=2 sw=2 et:
+# vim: set ts=4 sts=4 sw=4 noet :"
+SHELL_MODELINE="# vim:set ts=8 sts=2 sw=2 et:"
+
+# vim:set ts=8 sts=2 sw=2 et syn=sh:

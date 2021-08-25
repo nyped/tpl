@@ -1,6 +1,6 @@
 # tpl
 
-a simple (and restricted?) template creator
+a simple template creator
 
 # Prerequisites
 
@@ -10,11 +10,11 @@ a simple (and restricted?) template creator
 
 ```bash
 $ cat Makefile
-$ make install
+# make install
 ```
 
 # uninstallation
 
 ```bash
-$ make uninstall
+# make uninstall
 ```
