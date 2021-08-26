@@ -1,4 +1,4 @@
-# Maintainer: lennypeers <lennypeers+git at protonmail>
+# Maintainer: lennypeers <lennypeers+git at gmail>
 pkgname=tpl
 pkgver=0.3
 pkgrel=1
