@@ -3,12 +3,14 @@
 # Fri Apr  9 11:45:30 PM CEST 2021
 # lennypeers
 
-readonly VERSION=0.3
+readonly VERSION=0.4
 
 TPL_BASE=/usr/share/tpl
 TPL_TEMP_DIR=${TPL_BASE}/templates
 TPL_BASE_HOME=~/.config/tpl
 TPL_TEMP_DIR_HOME=${TPL_BASE_HOME}/templates/
+
+declare -a TARGETS
 
 fail() {
   echo -e "$1" >&2
@@ -17,13 +19,14 @@ fail() {
 
 usage() {
   cat << EOF
-Usage: tpl <cmd | filename [-f | --force]>
+Usage: tpl <cmd | [-f | --force] files>
 Available commands:
 -h, --help      Show this message
 -v, --version   Display misc infos
+
 -f, --force     Overwrite existing file
 
-Where filename is Makefile or README,
+Where filenams are in Makefile or README,
 or of the format BASE.EXT, with EXT in:
 c
 h
@@ -81,13 +84,14 @@ read_conf() {
   [[ -f ~/.config/tpl/config ]] && \
     source ~/.config/tpl/config
 
-  [[ -z $TITLE ]] && TITLE=" ${1}"
-  [[ -z $TITLE_CAP ]] && TITLE_CAP="${1^^}"
-
   for glob in ${globals[@]}; do
     eval content="\$${glob}"
     export "$glob=$content"
   done
+}
+
+set_title() {
+  export TITLE=" ${1}" TITLE_CAP="${1^^}"
 }
 
 while [[ -n $1 ]]; do
@@ -107,19 +111,15 @@ while [[ -n $1 ]]; do
     ;;
 
     [Mm]akefile | [Mm]ake)
-      [[ -n $FOUND ]] && fail "Only one file expected" 253
-      EXT=Makefile FOUND=1
+      TARGETS+=(.Makefile)
     ;;
 
     README)
-      [[ -n $FOUND ]] && fail "Only one file expected" 253
-      EXT=README FOUND=1
+      TARGETS+=(.README)
     ;;
 
     *.*)
-      [[ -n $FOUND ]] && fail "Only one file expected" 253
-      FOUND=1
-      IFS=. read -r BASE EXT <<< "$1"
+      TARGETS+=("$1")
     ;;
 
     *)
@@ -131,8 +131,16 @@ while [[ -n $1 ]]; do
   shift
 done
 
-read_conf "$BASE"
-find_template "$EXT" "$BASE"
-write "$TEMPLATE" "$NAME" "$EXT"
+[[ ${#TARGETS[@]} == 0 ]] && fail "No file given" 253
+
+read_conf
+
+for file in "${TARGETS[@]}"; do
+  IFS=. read -r BASE EXT <<< "$file"
+  set_title "$BASE"
+  find_template "$EXT" "$BASE"
+  write "$TEMPLATE" "$NAME" "$EXT"
+  BASE= EXT=
+done
 
 # vim: set ts=2 sts=2 sw=2 et :

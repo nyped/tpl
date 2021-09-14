@@ -12,8 +12,6 @@ globals=(
   MD_MODELINE
   PY_MODELINE
   SHELL_MODELINE
-  TITLE     # auto set if empty
-  TITLE_CAP # auto set if empty
 )
 
 # File permissions for templates.
