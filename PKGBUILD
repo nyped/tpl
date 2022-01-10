@@ -1,6 +1,6 @@
 # Maintainer: lennypeers <lennypeers+git at gmail>
 pkgname=tpl
-pkgver=0.4
+pkgver=0.4.2
 pkgrel=1
 pkgdesc="template creator"
 arch=(x86_64)

@@ -7,6 +7,7 @@ globals=(
   C_MAKEFILE_CC
   C_MAKEFILE_CFLAGS
   C_MODELINE
+  CPP_MAIN_HEADER
   DATE
   EXE
   MD_MODELINE
@@ -28,6 +29,7 @@ perms=(
 # return in the quotes. \n does not work.
 AUTHOR=" Your name here"
 C_MAIN_HEADER="#include <stdio.h>"
+CPP_MAIN_HEADER="#include <iostream>"
 C_MAKEFILE_CC=gcc
 C_MAKEFILE_CFLAGS="-Wall -g -Werror -pedantic"
 C_MODELINE="

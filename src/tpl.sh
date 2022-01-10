@@ -3,7 +3,7 @@
 # Fri Apr  9 11:45:30 PM CEST 2021
 # lennypeers
 
-readonly VERSION=0.4
+readonly VERSION=0.4.2
 
 TPL_BASE=/usr/share/tpl
 TPL_TEMP_DIR=${TPL_BASE}/templates
@@ -45,7 +45,7 @@ infos() {
   cat << EOF
 tpl v${VERSION}
 MIT License
-Copyright (c) 2021 lennypeers
+Copyright (c) 2022 lennypeers
 EOF
 }
 
