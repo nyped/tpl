@@ -6,7 +6,7 @@ jobs:
     steps:
 
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: build package
       run: |
@@ -22,7 +22,7 @@ jobs:
         docker run -t -v $PWD:/build archlinux /bin/bash /build/entrypoint.sh
 
     - name: upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: tpl
         path: ${{ github.workspace }}/tpl-*-x86_64.pkg.tar.zst
