@@ -1,146 +1,137 @@
 #!/usr/bin/env bash
 # tpl
-# Fri Apr  9 11:45:30 PM CEST 2021
-# lennypeers
 
-readonly VERSION=0.4.2
+readonly VERSION=0.5.0
 
-TPL_BASE=/usr/share/tpl
-TPL_TEMP_DIR=${TPL_BASE}/templates
-TPL_BASE_HOME=~/.config/tpl
-TPL_TEMP_DIR_HOME=${TPL_BASE_HOME}/templates/
+readonly TPL_BASE=/usr/share/tpl
+readonly TPL_TEMP_DIR=${TPL_BASE}/templates
+readonly TPL_BASE_HOME=~/.config/tpl
+readonly TPL_TEMP_DIR_HOME=${TPL_BASE_HOME}/templates/
 
-declare -a TARGETS
-
-fail() {
-  echo -e "$1" >&2
-  exit ${2:-255}
-}
+declare -a targets
 
 usage() {
   cat << EOF
-Usage: tpl <cmd | [-f | --force] files>
-Available commands:
--h, --help      Show this message
--v, --version   Display misc infos
+tpl - template creator
+
+Usage: $0 [-f | -h | -l | -v] <base.extension | extension>
 
 -f, --force     Overwrite existing file
+-h, --help      Show this message
+-l, --list      List available extensions
+-v, --version   Display version
 
-Where filenams are in Makefile or README,
-or of the format BASE.EXT, with EXT in:
-c
-h
-py
-sh
-zsh
-md
+If no basename is given but only an extension, the template is printed on
+stdout.
 
-Custom templates can be added to ~/.config/tpl/templates.
-Default config can be found at /usr/share/tpl/config and
-can be overwritten in ~/.config/tpl/config
+Custom templates can be added to \$HOME/.config/tpl/templates.
+Default config can be found at /usr/share/tpl/config and can be overwritten at
+\$HOME/.config/tpl/config
 EOF
 }
 
-infos() {
+version() {
   cat << EOF
 tpl v${VERSION}
 MIT License
-Copyright (c) 2022 lennypeers
+Copyright (c) 2023 nyped
 EOF
 }
 
+fail() {
+  echo -e "$1" >&2
+  exit "${2:-255}"
+}
+
 write() {
-  [[ -f $2 && "$FORCE" != 1 ]] && fail "File $2 exists." 1
+  [[ -f $2 && "$force" != 1 ]] && fail "File '$2' exists." 253
   envsubst < "$1" > "$2"
-  perms "$2" "$3"
 }
 
 perms() {
-  for ex in "${!perms[@]}"; do
-    if [[ $ex == $2 ]]; then
-      chmod ${perms[$ex]} "$1"
-      return
-    fi
-  done
+  chmod "${perms[$2]}" "$1" &> /dev/null || true
 }
 
 find_template() {
-  NAME="$2.$1" NAME="${NAME##.}"
-
-  [[ -f ${TPL_TEMP_DIR_HOME}/$1 ]] &&
+  if [[ -f ${TPL_TEMP_DIR_HOME}/$1 ]]; then
     TEMPLATE="${TPL_TEMP_DIR_HOME}/$1"
-
-  [[ -f ${TPL_TEMP_DIR}/$1 ]] &&
+  elif [[ -f ${TPL_TEMP_DIR}/$1 ]]; then
     TEMPLATE="${TPL_TEMP_DIR}/$1"
-
-  [[ -z $TEMPLATE ]] && fail "Missing $1 template" 254
+  else
+    fail "Missing '$1' template" 254
+  fi
 }
 
 read_conf() {
-  declare -ag globals
   declare -Ag perms
 
+  # shellcheck source=/dev/null
   source /usr/share/tpl/config
-  [[ -f ~/.config/tpl/config ]] && \
-    source ~/.config/tpl/config
-
-  for glob in ${globals[@]}; do
-    eval content="\$${glob}"
-    export "$glob=$content"
-  done
+  # shellcheck source=/dev/null
+  [[ -f ~/.config/tpl/config ]] && source ~/.config/tpl/config
 }
 
-set_title() {
-  export TITLE=" ${1}" TITLE_CAP="${1^^}"
-}
-
-while [[ -n $1 ]]; do
-  case "$1" in
+for arg do
+  case "$arg" in
     -h | --help)
       usage
       exit 0
-    ;;
+      ;;
 
     -v | --version)
-      infos
+      version
       exit 0
-    ;;
+      ;;
 
     -f | --force)
-      FORCE=1
-    ;;
+      force=1
+      ;;
 
-    [Mm]akefile | [Mm]ake)
-      TARGETS+=(.Makefile)
-    ;;
-
-    README)
-      TARGETS+=(.README)
-    ;;
-
-    *.*)
-      TARGETS+=("$1")
-    ;;
+    -l | --list)
+      {
+        ls $TPL_TEMP_DIR
+        ls $TPL_TEMP_DIR_HOME
+      } 2>/dev/null | sort | uniq
+      exit 0
+      ;;
 
     *)
-      usage >&2
-      exit 255
-    ;;
+      targets+=("$arg")
+      ;;
   esac
-
-  shift
 done
 
-[[ ${#TARGETS[@]} == 0 ]] && fail "No file given" 253
+[[ ${#targets[@]} == 0 ]] && {
+  usage
+  exit 253
+}
 
 read_conf
 
-for file in "${TARGETS[@]}"; do
-  IFS=. read -r BASE EXT <<< "$file"
-  set_title "$BASE"
-  find_template "$EXT" "$BASE"
-  write "$TEMPLATE" "$NAME" "$EXT"
-  BASE= EXT=
+for target in "${targets[@]}"; do
+  ext=""
+
+  case "$target" in
+    *.)  # trailing dot (no extension)
+      fail "not extension given" 255
+      ;;
+
+    *.*)  # base and ext
+      out="$target" ext="${target##*.}"
+      base="$(basename "$target")" base="${base%.*}"
+      export TITLE="$base"
+      ;;
+
+    *)  # no dot, assuming extension only
+      ext="$target" out=/dev/stdout
+      force=1  # force write for vim
+      export TITLE=dummy
+      ;;
+  esac
+
+  find_template "$ext"
+  write "$TEMPLATE" "$out"
+  perms "$out" "$ext"
 done
 
 # vim: set ts=2 sts=2 sw=2 et :

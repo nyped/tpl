@@ -1,6 +1,3 @@
-#ifndef _${TITLE_CAP}_H_
-#define _${TITLE_CAP}_H_
+#pragma once
 
-
-
-#endif /* _${TITLE_CAP}_H_ */${C_MODELINE}
+${C_MODELINE}

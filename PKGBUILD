@@ -1,15 +1,15 @@
 # Maintainer: lennypeers <lennypeers+git at gmail>
 pkgname=tpl
-pkgver=0.4.2
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="template creator"
-arch=(x86_64)
-url="https://github.com/lennypeers/tpl"
+arch=('any')
+url="https://github.com/nyped/tpl"
 license=(MIT)
-depends=(bash)
+depends=(bash gettext)
 makedepends=(git)
-source=("git+https://github.com/lennypeers/tpl.git")
-md5sums=('SKIP')
+source=("git+https://github.com/nyped/tpl.git")
+sha512sums=('SKIP')
 
 package() {
 	cd "$srcdir/$pkgname"

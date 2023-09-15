@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
-#${TITLE}
-#${DATE}
-#${AUTHOR}
-
-
+#!/usr/bin/env python
+# ${TITLE}
+# ${DATE}
+# ${AUTHOR}
 
 if __name__ == '__main__':
-	pass${PY_MODELINE}
+	pass
+
+${PY_MODELINE}

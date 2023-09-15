@@ -1,0 +1,13 @@
+CC := ${MAKE_CC}
+CFLAGS := ${MAKE_CFLAGS}
+EXE := ${TITLE}
+
+.PHONY: all clean clear
+
+all: $(EXE)
+
+clean:
+	rm -f *.o
+
+clear: clean
+	rm -f $(EXE)

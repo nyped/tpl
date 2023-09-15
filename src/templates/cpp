@@ -1,9 +1,9 @@
-${CPP_MAIN_HEADER}
+${CPP_HEADER}
 
 int
-main(int argc, char **argv) {
-
-
-
+main (int argc, char *argv[])
+{
     return 0;
-}${C_MODELINE}
+}
+
+${C_MODELINE}
