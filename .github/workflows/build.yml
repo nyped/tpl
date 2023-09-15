@@ -25,13 +25,13 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: tpl
-        path: ${{ github.workspace }}/tpl-*-x86_64.pkg.tar.zst
+        path: ${{ github.workspace }}/tpl-*.pkg.tar.zst
 
     - name: create tag
       id: create_tag
       run: |
         source PKGBUILD
-        echo "::set-output name=tag::${pkgver}-${pkgrel}"
+        echo "tag=${pkgver}-${pkgrel}" >> $GITHUB_OUTPUT
         echo $pkgver $pkgrel
 
     - name: Release
